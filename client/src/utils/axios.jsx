@@ -1,23 +1,17 @@
-// src/utils/axiosInstance.js (ya jahan bhi yeh file hai)
-
 import axios from "axios";
 
-// ✅ Base URL from env (Render URL build time pe yahan aa jayega)
 const API_BASE_URL = import.meta.env.VITE_API || "http://localhost:8080";
 
 const instance = axios.create({
   baseURL: API_BASE_URL,
 });
 
-// ✅ AUTH TOKEN INTERCEPTOR
 instance.interceptors.request.use(
   (config) => {
     try {
       const auth = localStorage.getItem("auth");
-
       if (auth) {
         const authData = JSON.parse(auth);
-
         if (authData?.token) {
           config.headers.Authorization = `Bearer ${authData.token}`;
         }
@@ -25,13 +19,11 @@ instance.interceptors.request.use(
     } catch (error) {
       console.error("Auth parse error:", error);
     }
-
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// ✅ RESPONSE INTERCEPTOR – softer handling
 instance.interceptors.response.use(
   (response) => response,
   (error) => {
