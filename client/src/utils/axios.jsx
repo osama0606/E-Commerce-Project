@@ -1,10 +1,15 @@
+// src/utils/axiosInstance.js (ya jahan bhi yeh file hai)
+
 import axios from "axios";
 
+// ✅ Base URL from env (Render URL build time pe yahan aa jayega)
+const API_BASE_URL = import.meta.env.VITE_API || "http://localhost:8080";
+
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_API || "http://localhost:8080",
+  baseURL: API_BASE_URL,
 });
 
-// ✅ AUTH TOKEN INTERCEPTOR (keep this)
+// ✅ AUTH TOKEN INTERCEPTOR
 instance.interceptors.request.use(
   (config) => {
     try {
@@ -15,11 +20,10 @@ instance.interceptors.request.use(
 
         if (authData?.token) {
           config.headers.Authorization = `Bearer ${authData.token}`;
-          // console.log("✅ Token added:", authData.token.substring(0, 20) + "...");
         }
       }
     } catch (error) {
-      console.error("❌ Auth parse error:", error);
+      console.error("Auth parse error:", error);
     }
 
     return config;
@@ -35,14 +39,13 @@ instance.interceptors.response.use(
     const message =
       error.response?.data?.message || error.response?.data?.error;
 
-    // Sirf tab force logout karo jab clearly auth fail ho
     if (
       status === 401 &&
       message &&
       typeof message === "string" &&
       message.toLowerCase().includes("token")
     ) {
-      console.error("❌ 401 - Token invalid or expired");
+      console.error("401 - Token invalid or expired");
       localStorage.removeItem("auth");
       window.location.href = "/login";
     }

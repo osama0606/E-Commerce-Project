@@ -1,14 +1,9 @@
 import React, { useState } from "react";
 import Layout from "../../components/Layout/Layout";
-import axios from "axios";
+// yahan pe direct axios ki jagah tumhara custom instance import karo
+import axios from "../../utils/axiosInstance"; // <-- path apne project ke hisaab se adjust karna
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-
-/* ===============================
-   IMPORTANT: API BASE URL
-================================ */
-// agar already kahi aur set hai to yeh line optional hai
-axios.defaults.baseURL = "http://localhost:8080";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -20,9 +15,6 @@ const Register = () => {
 
   const navigate = useNavigate();
 
-  /* ===============================
-     FORM SUBMIT
-  ================================ */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -54,7 +46,6 @@ const Register = () => {
     <Layout title="Register - Ecommerce App">
       <div className="min-h-[90vh] flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4 py-12 transition-colors">
         <div className="w-full max-w-2xl bg-white dark:bg-slate-900 rounded-xl shadow-lg dark:shadow-2xl p-8 border border-slate-200 dark:border-slate-800">
-          
           {/* HEADER */}
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
