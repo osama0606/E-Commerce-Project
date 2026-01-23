@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Layout from "../../components/Layout/Layout";
-import axios from "axios";
+import api from "../../utils/axios"; // ✅ yahan instance use ho raha hai
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../../context/auth";
@@ -15,7 +15,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/v1/auth/login", {
+      const res = await api.post("/api/v1/auth/login", {
         email,
         password,
       });
@@ -32,14 +32,14 @@ const Login = () => {
         setAuth(authData);
         localStorage.setItem("auth", JSON.stringify(authData));
 
-        // ✅ ROLE BASED REDIRECT (FIXED)
+        // ✅ ROLE BASED REDIRECT
         if (Number(res.data.user.role) === 1) {
           navigate("/dashboard/admin", { replace: true });
         } else {
           navigate("/dashboard/user", { replace: true });
         }
       } else {
-        toast.error(res.data.message);
+        toast.error(res.data.message || "Login failed");
       }
     } catch (error) {
       console.error(error);
@@ -51,14 +51,15 @@ const Login = () => {
     <Layout title="Login - Ecommerce App">
       <div className="min-h-[90vh] flex items-center justify-center px-4 py-12 bg-slate-50 dark:bg-slate-950 transition-colors">
         <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-xl shadow-xl dark:shadow-2xl p-8 border border-slate-200 dark:border-slate-800">
-
           <h4 className="text-3xl font-bold text-center mb-6 text-slate-900 dark:text-white">
             LOGIN
           </h4>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-200">Email</label>
+              <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-200">
+                Email
+              </label>
               <input
                 type="email"
                 autoFocus
@@ -71,7 +72,9 @@ const Login = () => {
             </div>
 
             <div>
-              <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-200">Password</label>
+              <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-200">
+                Password
+              </label>
               <input
                 type="password"
                 value={password}
@@ -109,7 +112,6 @@ const Login = () => {
               </span>
             </p>
           </form>
-
         </div>
       </div>
     </Layout>
