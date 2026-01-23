@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Layout from "../../components/Layout/Layout";
 // yahan pe direct axios ki jagah tumhara custom instance import karo
-import axios from "../../utils/axiosInstance"; // <-- path apne project ke hisaab se adjust karna
+import axios from "../../utils/axios"; // <-- path apne project ke hisaab se adjust karna
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
