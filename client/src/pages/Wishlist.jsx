@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 
 const Wishlist = () => {
   const [auth] = useAuth();
-  const { wishlist, removeFromWishlist } = useWishlist();
+  const { wishlist, removeFromWishlist, clearWishlist } = useWishlist();
   const { cart, addToCart } = useCart();
   const navigate = useNavigate();
   const API = import.meta.env.VITE_API;
@@ -212,7 +212,7 @@ const Wishlist = () => {
                       "Are you sure you want to clear your entire wishlist?"
                     )
                   ) {
-                    wishlist.forEach((p) => removeFromWishlist(p._id));
+                    clearWishlist();
                     toast.success("Wishlist cleared");
                   }
                 }}

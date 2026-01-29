@@ -52,9 +52,8 @@ const CartPage = () => {
   useEffect(() => {
     if (auth?.token) {
       getToken();
-    } else {
-      clearCart();
     }
+    // ❌ logout pe yahan clearCart() nahi karna
   }, [auth?.token]);
 
   const handlePayment = async () => {
@@ -176,7 +175,9 @@ const CartPage = () => {
         <div className="max-w-3xl mx-auto px-4 py-20">
           <div className="bg-white dark:bg-slate-900 rounded-xl shadow-lg p-12 text-center transition-colors">
             <div className="text-6xl mb-4">🛒</div>
-            <h1 className="text-3xl font-bold mb-4 text-slate-900 dark:text-white">Login Required</h1>
+            <h1 className="text-3xl font-bold mb-4 text-slate-900 dark:text-white">
+              Login Required
+            </h1>
             <p className="text-slate-600 dark:text-slate-400 mb-8 text-lg">
               Please login to view your cart and continue shopping.
             </p>
@@ -295,18 +296,26 @@ const CartPage = () => {
 
             <div className="md:col-span-5">
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 shadow-lg sticky top-24 transition-colors">
-                <h2 className="text-2xl font-bold mb-6 text-slate-900 dark:text-white">Order Summary</h2>
+                <h2 className="text-2xl font-bold mb-6 text-slate-900 dark:text-white">
+                  Order Summary
+                </h2>
                 <div className="border-b border-slate-200 dark:border-slate-700 pb-4 mb-4">
                   <div className="flex justify-between mb-2">
-                    <span className="text-slate-600 dark:text-slate-400 transition-colors">Subtotal:</span>
+                    <span className="text-slate-600 dark:text-slate-400 transition-colors">
+                      Subtotal:
+                    </span>
                     <span className="font-semibold">{totalPrice()}</span>
                   </div>
                   <div className="flex justify-between mb-2">
-                    <span className="text-slate-600 dark:text-slate-400 transition-colors">Shipping:</span>
+                    <span className="text-slate-600 dark:text-slate-400 transition-colors">
+                      Shipping:
+                    </span>
                     <span className="font-semibold text-green-600">FREE</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-600 dark:text-slate-400 transition-colors">Tax:</span>
+                    <span className="text-slate-600 dark:text-slate-400 transition-colors">
+                      Tax:
+                    </span>
                     <span className="font-semibold">
                       Calculated at checkout
                     </span>

@@ -1,3 +1,4 @@
+// client/src/components/Layout/Header.jsx
 import React, { useState, useCallback } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth";
@@ -11,8 +12,8 @@ import { Badge } from "antd";
 
 const Header = () => {
   const [auth, setAuth] = useAuth();
-  const { cart } = useCart();
-  const { wishlist } = useWishlist();
+  const { cart, clearCart, loadingCart } = useCart();
+  const { wishlist, loadingWishlist } = useWishlist();
   const { theme, toggleTheme } = useTheme();
   const { categories, loading } = useCategory();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -22,9 +23,14 @@ const Header = () => {
   const handleLogout = useCallback(() => {
     setAuth({ ...auth, user: null, token: "" });
     localStorage.removeItem("auth");
+    clearCart();
     toast.success("Logged out successfully!");
     navigate("/", { replace: true });
-  }, [auth, setAuth, navigate]);
+  }, [auth, setAuth, clearCart, navigate]);
+
+  // Counts – hamesha current state se, loading ho to bhi latest length
+  const cartCount = loadingCart ? 0 : (Array.isArray(cart) ? cart.length : 0);
+  const wishlistCount = Array.isArray(wishlist) ? wishlist.length : 0;
 
   return (
     <>
@@ -185,7 +191,7 @@ const Header = () => {
               {auth?.user && (
                 <NavLink to="/wishlist" className="hidden sm:inline-block">
                   <Badge
-                    count={wishlist?.length || 0}
+                    count={wishlistCount}
                     size="small"
                     style={{ backgroundColor: "#f97373" }}
                   >
@@ -199,7 +205,7 @@ const Header = () => {
               {/* Cart */}
               <NavLink to="/cart">
                 <Badge
-                  count={cart?.length || 0}
+                  count={cartCount}
                   size="small"
                   style={{ backgroundColor: "#10b981" }}
                 >
@@ -384,7 +390,7 @@ const Header = () => {
                     onClick={() => setMenuOpen(false)}
                     className="block px-1 py-2 text-slate-800 dark:text-slate-100"
                   >
-                    Wishlist ({wishlist?.length || 0})
+                    Wishlist ({wishlistCount})
                   </NavLink>
                 )}
                 <NavLink
@@ -392,7 +398,7 @@ const Header = () => {
                   onClick={() => setMenuOpen(false)}
                   className="block px-1 py-2 text-slate-800 dark:text-slate-100"
                 >
-                  Cart ({cart?.length || 0})
+                  Cart ({cartCount})
                 </NavLink>
 
                 {!auth?.user ? (

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://e-commerce-project-2s79.onrender.com";
+const API_BASE_URL = "http://localhost:8080";
 console.log("API_BASE_URL:", API_BASE_URL);
 const instance = axios.create({
   baseURL: API_BASE_URL,

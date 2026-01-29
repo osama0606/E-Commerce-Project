@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Layout from "../../components/Layout/Layout";
-import api from "../../utils/axios"; // ✅ yahan instance use ho raha hai
+import api from "../../utils/axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../../context/auth";
@@ -23,7 +23,7 @@ const Login = () => {
       if (res?.data?.success) {
         toast.success(res.data.message);
 
-        // ✅ SAVE AUTH STATE
+        // SAVE AUTH STATE
         const authData = {
           user: res.data.user,
           token: res.data.token,
@@ -32,7 +32,7 @@ const Login = () => {
         setAuth(authData);
         localStorage.setItem("auth", JSON.stringify(authData));
 
-        // ✅ ROLE BASED REDIRECT
+        // ROLE BASED REDIRECT
         if (Number(res.data.user.role) === 1) {
           navigate("/dashboard/admin", { replace: true });
         } else {
