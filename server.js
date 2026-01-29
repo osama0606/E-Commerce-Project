@@ -22,10 +22,19 @@ connectDB();
 const app = express();
 
 // middlewares
-app.use(cors({
-  origin: ["http://localhost:5173", "https://your-vercel-domain.vercel.app", "https://e-commerce-project-2s79.onrender.com"],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://e-commerce-project-liart-rho.vercel.app",
+    ],
+    credentials: true,
+  })
+);
+
+// (optional but safe) preflight
+// app.options("*", cors());
+
 app.use(express.json());
 app.use(morgan("dev"));
 
@@ -48,5 +57,9 @@ const PORT = process.env.PORT || 8080;
 
 // run listen
 app.listen(PORT, () => {
-  console.log(colors.bgCyan.white(`Server Running on ${process.env.DEV_MODE || 'development'} mode on port ${PORT}`));
+  console.log(
+    colors.bgCyan.white(
+      `Server Running on ${process.env.DEV_MODE || "development"} mode on port ${PORT}`
+    )
+  );
 });
