@@ -39,22 +39,17 @@ const Header = () => {
           <div className="flex h-16 items-center justify-between gap-4">
             {/* Logo */}
             <div className="flex items-center gap-2 flex-shrink-0">
-              <Link to="/" className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-slate-900 dark:bg-slate-100 flex items-center justify-center shadow-md">
-                  <span className="text-sm font-extrabold tracking-[0.18em] text-white dark:text-slate-900">
-                    TS
-                  </span>
-                </div>
-                <div className="leading-tight hidden sm:block">
-                  <p className="text-lg font-semibold text-slate-900 dark:text-slate-50">
-                    TajSouq
-                  </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    India ka Royal Online Bazaar
-                  </p>
-                </div>
-              </Link>
-            </div>
+  <Link to="/" className="flex items-center gap-3">
+    <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-900/5 flex items-center justify-center shadow-md">
+      <img
+        src="banners/logo.png" 
+        alt="TajSouq logo"
+        className="w-full h-full object-cover"
+      />
+    </div>
+    
+  </Link>
+</div>
 
             {/* Center nav – desktop */}
             <nav className="hidden lg:flex items-center gap-6">
