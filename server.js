@@ -8,41 +8,45 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
+import wishlistRoutes from "./routes/wishlistRoutes.js";
 import cors from "cors";
 
-//configure env
+// configure env
 dotenv.config();
 
-//databse config
+// database config
 connectDB();
 
-//rest object
+// rest object
 const app = express();
 
-//middelwares
-app.use(cors());
+// middlewares
+app.use(cors({
+  origin: ["http://localhost:5173", "https://your-vercel-domain.vercel.app", "https://e-commerce-project-2s79.onrender.com"],
+  credentials: true
+}));
 app.use(express.json());
 app.use(morgan("dev"));
 
-//routes
+// routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/product", productRoutes);
 app.use("/api/v1/order", orderRoutes);
 app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/cart", cartRoutes);
+app.use("/api/v1/wishlist", wishlistRoutes);
 
-//rest api
+// rest api
 app.get("/", (req, res) => {
   res.send("<h1>Welcome to ecommerce app</h1>");
 });
 
-//PORT
+// PORT
 const PORT = process.env.PORT || 8080;
 
-//run listen
+// run listen
 app.listen(PORT, () => {
-  console.log(
-    `Server Running on ${process.env.DEV_MODE} mode on port ${PORT}`.bgCyan
-      .white
-  );
+  console.log(colors.bgCyan.white(`Server Running on ${process.env.DEV_MODE || 'development'} mode on port ${PORT}`));
 });

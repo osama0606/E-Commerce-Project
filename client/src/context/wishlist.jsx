@@ -1,85 +1,87 @@
-import { useState, useContext, createContext, useEffect, useCallback } from "react";
+import {
+  useState,
+  useContext,
+  createContext,
+  useEffect,
+  useCallback,
+} from "react";
 import { useAuth } from "./auth";
+import api from "../utils/axios";
 
 const WishlistContext = createContext();
 
 const WishlistProvider = ({ children }) => {
   const [auth] = useAuth();
   const [wishlist, setWishlist] = useState([]);
+  const [loadingWishlist, setLoadingWishlist] = useState(false);
 
-  // current user ke liye unique key
-  const storageKey = auth?.user?._id
-    ? `wishlist_${auth.user._id}`
-    : null;
-
-  // login / user change hone par us user ki wishlist load karo
   useEffect(() => {
-    if (!storageKey) {
+    if (!auth?.token) {
       setWishlist([]);
       return;
     }
 
-    const existingWishlist = localStorage.getItem(storageKey);
-    if (existingWishlist) {
+    const fetchWishlist = async () => {
       try {
-        setWishlist(JSON.parse(existingWishlist));
+        setLoadingWishlist(true);
+        const res = await api.get("/api/v1/wishlist");
+        if (res?.data?.success && Array.isArray(res.data.wishlist)) {
+          // Normalize: extract product objects
+          const normalized = res.data.wishlist.map(item => item.product);
+          setWishlist(normalized);
+        }
       } catch (error) {
-        console.error("Error parsing wishlist:", error);
-        localStorage.removeItem(storageKey);
-        setWishlist([]);
+        console.error("Fetch wishlist error:", error);
+      } finally {
+        setLoadingWishlist(false);
       }
-    } else {
-      setWishlist([]);
-    }
-  }, [storageKey]);
+    };
 
-  // helper: safe write
+    fetchWishlist();
+  }, [auth?.token]);
+
   const persist = useCallback(
-    (items) => {
+    async (items) => {
       setWishlist(items);
-      if (storageKey) {
-        localStorage.setItem(storageKey, JSON.stringify(items));
+
+      if (auth?.token) {
+        try {
+          await api.post("/api/v1/wishlist", {
+            items: items.map((p) => ({ product: p._id })),
+          });
+        } catch (error) {
+          console.error("Save wishlist error:", error);
+        }
       }
     },
-    [storageKey]
+    [auth?.token]
   );
 
-  // Add to wishlist
   const addToWishlist = (product) => {
     const exists = wishlist.find((item) => item._id === product._id);
-    if (exists) {
-      return false; // Already in wishlist
-    }
-    const newWishlist = [...wishlist, product];
-    persist(newWishlist);
-    return true; // Added successfully
+    if (exists) return false;
+    const next = [...wishlist, product];
+    persist(next);
+    return true;
   };
 
-  // Remove from wishlist
   const removeFromWishlist = (productId) => {
-    const newWishlist = wishlist.filter((item) => item._id !== productId);
-    persist(newWishlist);
+    const next = wishlist.filter((item) => item._id !== productId);
+    persist(next);
   };
 
-  // Check if product is in wishlist
-  const isInWishlist = (productId) => {
-    return wishlist.some((item) => item._id === productId);
-  };
+  const isInWishlist = (productId) =>
+    wishlist.some((item) => item._id === productId);
 
-  // Clear wishlist (sirf in‑memory, user ka stored data optional)
   const clearWishlist = () => {
-    setWishlist([]);
-    if (storageKey) {
-      // agar bilkul delete karna ho to ye line rakho,
-      // agar future login pe bhi wishlist chahiye to is line ko comment kar do.
-      // localStorage.removeItem(storageKey);
-    }
+    persist([]);
   };
 
   return (
     <WishlistContext.Provider
       value={{
         wishlist,
+        loadingWishlist,
         addToWishlist,
         removeFromWishlist,
         isInWishlist,
@@ -91,7 +93,6 @@ const WishlistProvider = ({ children }) => {
   );
 };
 
-// Custom hook
 const useWishlist = () => useContext(WishlistContext);
 
 export { useWishlist, WishlistProvider };
