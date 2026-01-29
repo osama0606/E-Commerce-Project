@@ -1,7 +1,13 @@
+// client/src/utils/axios.jsx
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8080";
+// Local dev vs production ke liye alag baseURL
+const API_BASE_URL = import.meta.env.PROD
+  ? "https://project-xmts.onrender.com" // Render backend URL
+  : "http://localhost:8080";            // sirf local development ke liye
+
 console.log("API_BASE_URL:", API_BASE_URL);
+
 const instance = axios.create({
   baseURL: API_BASE_URL,
 });
