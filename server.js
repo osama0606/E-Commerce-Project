@@ -26,7 +26,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://e-commerce-project-liart-rho.vercel.app",
+      "https://tajsouq.vercel.app/",
     ],
     credentials: true,
   })
