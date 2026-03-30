@@ -12,7 +12,7 @@ import cartRoutes from "./routes/cartRoutes.js";
 import wishlistRoutes from "./routes/wishlistRoutes.js";
 import cors from "cors";
 
-// configure env
+// config env
 dotenv.config();
 
 // database config
@@ -21,20 +21,29 @@ connectDB();
 // rest object
 const app = express();
 
-// middlewares
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://tajsouq.vercel.app" 
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://tajsouq.vercel.app",
-    ],
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
 
-// (optional but safe) preflight
-// app.options("*", cors());
+// ✅ Preflight request fix
+app.options("*", cors());
 
+// middlewares
 app.use(express.json());
 app.use(morgan("dev"));
 
@@ -47,7 +56,7 @@ app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/wishlist", wishlistRoutes);
 
-// rest api
+// test route
 app.get("/", (req, res) => {
   res.send("<h1>Welcome to ecommerce app</h1>");
 });
@@ -55,7 +64,7 @@ app.get("/", (req, res) => {
 // PORT
 const PORT = process.env.PORT || 8080;
 
-// run listen
+// run server
 app.listen(PORT, () => {
   console.log(
     colors.bgCyan.white(
